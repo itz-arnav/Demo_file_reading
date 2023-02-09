@@ -1,0 +1,17 @@
+ruleList:
+   - id: 1
+     ruleCode: RULE001
+     ruleDescription: Age limit Check
+     condition: '(dob.plusYears(21).isAfter(java.time.LocalDate.now()) || dob.plusYears(60).isBefore(java.time.LocalDate.now().plusYears(tenure/12))) ? "NOGO" : "GO"'
+     action:
+   - id: 2
+     ruleCode: RULE002
+     ruleDescription: Ticket Size Check
+     condition: 'sanction_amount >= 25000 and sanction_amount <= 300000 ? "GO": "NOGO"'
+     action:
+   - id: 3
+     ruleCode: RULE003
+     ruleDescription: Tenure  Check
+     condition: '(tenure >= 6 and tenure <= 36)) ? "GO" : "NOGO"'
+     action:
+   -
