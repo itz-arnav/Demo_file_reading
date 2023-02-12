@@ -14,9 +14,12 @@ function isBalanced(str) {
 		"[": "]",
 		"{": "}",
 	};
+	let lines = str.split(",");
+	console.log(lines);
 
-	for (let i = 0; i < str.length; i++) {
-		let char = str[i];
+	for(let i = 0; i < lines.length; i++) {
+	for (let j = 0; j < lines[i].length; j++) {
+		let char = lines[i][j];
 
 		if (char in map) {
 			stack.push(char);
@@ -24,12 +27,27 @@ function isBalanced(str) {
 			let last = stack.pop();
 
 			if (char !== map[last]) {
-				return false;
+				return {
+					flag: -1,
+					line : i + 1,
+				};
 			}
 		}
 	}
+	}
 
-	return stack.length === 0;
+	if(stack.length  === 0){
+		return {
+			flag: 0,
+			line : null
+		}
+	}
+	else{
+		return {
+			flag: 1,
+			line : lines.length
+		}
+	}
 }
 
 const storage = multer.diskStorage({
@@ -91,15 +109,22 @@ app.post("/", uploaded.array("files"), async function (req, res) {
 		let results = [];
 		ruleList.forEach((individualElement) => {
 			if (individualElement !== null) {
-				if (isBalanced(individualElement.condition)) {
+				let resultObject = isBalanced(JSON.stringify(individualElement));
+				if (resultObject.flag == 0) {
 					results.push({
 						ruleCode: individualElement.ruleCode,
 						status: "Valid Parenthesis",
 					});
-				} else {
+				} else if(resultObject.flag < 0) {
 					results.push({
 						ruleCode: individualElement.ruleCode,
-						status: "Invalid Parenthesis",
+						status: "Expected Opening Parenthesis before line " + resultObject.line,
+					});
+				}
+				else{
+					results.push({
+						ruleCode: individualElement.ruleCode,
+						status: "Expected Closing Parenthesis in line " + resultObject.line,
 					});
 				}
 			}
