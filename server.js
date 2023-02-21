@@ -48,16 +48,14 @@ function isBalanced(str) {
 		};
 	}
 }
-
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, __dirname + "/uploaded");
+	  cb(null, 'D:/'); 
 	},
 	filename: function (req, file, cb) {
-		cb(null, file.originalname);
+	  cb(null, file.originalname);
 	},
-});
-
+  });
 async function readJavaFile(filePath) {
 	const set = new Set();
 	const rl = readline.createInterface({
@@ -165,7 +163,7 @@ app.post("/", uploaded.array("files"), async function (req, res) {
 			res.status(404).json({ message: "Bad File Name" });
 		}
 		const data = fs.readFileSync(
-			__dirname + "/uploaded/" + file.originalname,
+			"D:/" + file.originalname,
 			"utf8"
 		);
 		const ruleList = yaml.load(data).ruleList;
